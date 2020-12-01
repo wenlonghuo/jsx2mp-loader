@@ -8,8 +8,8 @@ function isNpmModule(value) {
   return !(value[0] === '.' || value[0] === '/');
 }
 
-function isExternalModule (value, externals = {}) {
-  return Object.keys(externals).some(item => value.includes(item)
+function isExternalModule(value, externals = {}) {
+  return Object.keys(externals).some(item => value.includes(item));
 }
 
 function isWeexModule(value) {
