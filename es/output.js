@@ -40,7 +40,7 @@ function transformCode(rawContent, mode, externalPlugins, externalPreset) {
   var plugins = externalPlugins.concat([require('@babel/plugin-proposal-export-default-from'), // for support of export default
   [require('babel-plugin-transform-define'), {
     'process.env.NODE_ENV': mode === 'build' ? 'production' : 'development'
-  }], [require('babel-plugin-minify-dead-code-elimination'), {
+  }], [require('babel-plugin-minify-dead-code-elimination-while-loop-fixed'), {
     optimizeRawSize: true,
     keepFnName: true
   }]]);
