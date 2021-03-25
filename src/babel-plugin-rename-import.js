@@ -3,7 +3,7 @@ const enhancedResolve = require('enhanced-resolve');
 const chalk = require('chalk');
 
 const { QUICKAPP } = require('./constants');
-const { isNpmModule, isWeexModule, isQuickAppModule, isRaxModule, isRaxAppModule, isJsx2mpRuntimeModule, isNodeNativeModule } = require('./utils/judgeModule');
+const { isNpmModule, isWeexModule, isExternalModule, isQuickAppModule, isRaxModule, isRaxAppModule, isJsx2mpRuntimeModule, isNodeNativeModule } = require('./utils/judgeModule');
 const { addRelativePathPrefix, normalizeOutputFilePath, removeExt } = require('./utils/pathHelper');
 const getAliasCorrespondingValue = require('./utils/getAliasCorrespondingValue');
 
@@ -25,7 +25,7 @@ const resolveWithTS = enhancedResolve.create.sync({
 
 module.exports = function visitor({ types: t }, options) {
   options = Object.assign({}, defaultOptions, options);
-  const { normalizeNpmFileName, distSourcePath, resourcePath, outputPath, disableCopyNpm, platform, aliasEntries } = options;
+  const { normalizeNpmFileName, distSourcePath, resourcePath, outputPath, disableCopyNpm, platform, aliasEntries, externals } = options;
   const source = (value, rootContext) => {
     // Example:
     // value => '@ali/universal-goldlog' or '@ali/xxx/foo/lib'
@@ -63,6 +63,11 @@ module.exports = function visitor({ types: t }, options) {
         }
 
         if (isNpmModule(value)) {
+          if (isExternalModule(value, externals)) {
+            path.skip();
+            return;
+          }
+
           if (isWeexModule(value)) {
             path.remove();
             return;
@@ -124,6 +129,11 @@ module.exports = function visitor({ types: t }, options) {
               moduleName = node.arguments[0].value;
             }
             if (isNpmModule(moduleName)) {
+              if (isExternalModule(moduleName, externals)) {
+                path.skip();
+                return;
+              }
+
               if (isWeexModule(moduleName)) {
                 path.replaceWith(t.nullLiteral());
                 return;
