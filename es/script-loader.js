@@ -12,6 +12,7 @@ var _require2 = require('fs-extra'),
     copySync = _require2.copySync,
     existsSync = _require2.existsSync,
     mkdirpSync = _require2.mkdirpSync,
+    ensureFileSync = _require2.ensureFileSync,
     writeJSONSync = _require2.writeJSONSync,
     readFileSync = _require2.readFileSync,
     readJSONSync = _require2.readJSONSync;
@@ -71,8 +72,7 @@ module.exports = function scriptLoader(content) {
       _loaderOptions$isRela = loaderOptions.isRelativeMiniappComponent,
       isRelativeMiniappComponent = _loaderOptions$isRela === void 0 ? false : _loaderOptions$isRela,
       aliasEntries = loaderOptions.aliasEntries,
-      constantDir = loaderOptions.constantDir,
-      externals = loaderOptions.externals;
+      constantDir = loaderOptions.constantDir;
   var rootContext = this.rootContext;
   var isJSON = isJSONFile(this.resourcePath);
   var isAppJSon = this.resourcePath === join(rootContext, 'src', 'app.json');
@@ -127,8 +127,7 @@ module.exports = function scriptLoader(content) {
         outputPath: outputPath,
         disableCopyNpm: disableCopyNpm,
         platform: platform,
-        aliasEntries: aliasEntries,
-        externals: externals
+        aliasEntries: aliasEntries
       }]],
       platform: platform,
       isTypescriptFile: isTypescriptFile(_this.resourcePath),
@@ -137,13 +136,22 @@ module.exports = function scriptLoader(content) {
     output(outputContent, null, outputOption);
   };
 
-  var outputDir = function outputDir(source, target) {
+  var outputDir = function outputDir(source, target, _temp) {
+    var _ref = _temp === void 0 ? {} : _temp,
+        _ref$isThirdMiniappCo = _ref.isThirdMiniappComponent,
+        isThirdMiniappComponent = _ref$isThirdMiniappCo === void 0 ? false : _ref$isThirdMiniappCo,
+        resourcePath = _ref.resourcePath;
+
     if (existsSync(source)) {
       mkdirpSync(target);
       copySync(source, target, {
         overwrite: false,
         filter: function filter(filename) {
-          return !/__(mocks|tests?)__/.test(filename) && OMIT_FILE_EXTENSION_IN_OUTPUT.indexOf(extname(filename)) === -1;
+          var isJSONFile = extname(filename) === '.json';
+          var isNpmDirFile = filename.indexOf('npm') > -1; // if isThirdMiniappComponent, only exclude the json file of the component itself
+
+          var filterJSONFile = isThirdMiniappComponent ? isNpmDirFile || !isJSONFile : !isJSONFile;
+          return !/__(mocks|tests?)__/.test(filename) && filterJSONFile; // JSON file will be written later because usingComponents may be modified
         }
       });
     }
@@ -192,6 +200,7 @@ module.exports = function scriptLoader(content) {
       }
 
       if (!existsSync(distComponentConfigPath)) {
+        ensureFileSync(distComponentConfigPath);
         writeJSONSync(distComponentConfigPath, componentConfig);
       }
     } else {
@@ -253,7 +262,10 @@ module.exports = function scriptLoader(content) {
         var miniappComponentDir = miniappComponentPath.slice(0, miniappComponentPath.lastIndexOf('/'));
         var source = join(sourcePackagePath, miniappComponentDir);
         var target = normalizeNpmFileName(join(outputPath, 'npm', relative(rootNodeModulePath, sourcePackagePath), miniappComponentDir));
-        outputDir(source, target); // Modify referenced component location according to the platform
+        outputDir(source, target, {
+          isThirdMiniappComponent: isThirdMiniappComponent,
+          resourcePath: this.resourcePath
+        }); // Modify referenced component location according to the platform
 
         var originalComponentConfigPath = join(sourcePackagePath, miniappComponentPath + '.json');
         var distComponentConfigPath = normalizeNpmFileName(join(outputPath, 'npm', relative(rootNodeModulePath, sourcePackagePath), miniappComponentPath + '.json'));
@@ -339,10 +351,10 @@ function getNearestNodeModulesPath(root, current) {
 }
 
 function generateDependencies(dependencies) {
-  return dependencies.map(function (_ref) {
-    var name = _ref.name,
-        loader = _ref.loader,
-        options = _ref.options;
+  return dependencies.map(function (_ref2) {
+    var name = _ref2.name,
+        loader = _ref2.loader,
+        options = _ref2.options;
     var mod = name;
     if (loader) mod = loader + '?' + JSON.stringify(options) + '!' + mod;
     return createImportStatement(mod);

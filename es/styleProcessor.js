@@ -22,7 +22,7 @@ var less = require('less');
 
 var stylus = require('stylus');
 
-var stylesheetLoader = require('stylesheet-loader');
+var stylesheetLoader = require('stylesheet-loader').default;
 /**
  * convert sass/stylus to css
  *

@@ -8,6 +8,10 @@ function isNpmModule(value) {
   return !(value[0] === '.' || value[0] === '/');
 }
 
+function isExternalModule(value, externals = {}) {
+  return Object.keys(externals).some(item => value.includes(item));
+}
+
 function isWeexModule(value) {
   return WEEX_MODULE_REG.test(value);
 }
@@ -42,6 +46,7 @@ function isTypescriptFile(value) {
 
 module.exports = {
   isNpmModule,
+  isExternalModule,
   isWeexModule,
   isQuickAppModule,
   isRaxModule,

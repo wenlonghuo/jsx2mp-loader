@@ -15,7 +15,6 @@ var _require2 = require('./constants'),
 
 var _require3 = require('./utils/judgeModule'),
     isNpmModule = _require3.isNpmModule,
-    isExternalModule = _require3.isExternalModule,
     isWeexModule = _require3.isWeexModule,
     isQuickAppModule = _require3.isQuickAppModule,
     isRaxModule = _require3.isRaxModule,
@@ -60,8 +59,7 @@ module.exports = function visitor(_ref, options) {
       outputPath = _options.outputPath,
       disableCopyNpm = _options.disableCopyNpm,
       platform = _options.platform,
-      aliasEntries = _options.aliasEntries,
-      externals = _options.externals;
+      aliasEntries = _options.aliasEntries;
 
   var source = function source(value, rootContext) {
     // Example:
@@ -100,11 +98,6 @@ module.exports = function visitor(_ref, options) {
         }
 
         if (isNpmModule(value)) {
-          if (isExternalModule(value, externals)) {
-            path.skip();
-            return;
-          }
-
           if (isWeexModule(value)) {
             path.remove();
             return;
@@ -166,11 +159,6 @@ module.exports = function visitor(_ref, options) {
             }
 
             if (isNpmModule(moduleName)) {
-              if (isExternalModule(moduleName, externals)) {
-                path.skip();
-                return;
-              }
-
               if (isWeexModule(moduleName)) {
                 path.replaceWith(t.nullLiteral());
                 return;
