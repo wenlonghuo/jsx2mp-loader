@@ -72,7 +72,9 @@ module.exports = function scriptLoader(content) {
       _loaderOptions$isRela = loaderOptions.isRelativeMiniappComponent,
       isRelativeMiniappComponent = _loaderOptions$isRela === void 0 ? false : _loaderOptions$isRela,
       aliasEntries = loaderOptions.aliasEntries,
-      constantDir = loaderOptions.constantDir;
+      constantDir = loaderOptions.constantDir,
+      _loaderOptions$extern = loaderOptions.externals,
+      externals = _loaderOptions$extern === void 0 ? {} : _loaderOptions$extern;
   var rootContext = this.rootContext;
   var isJSON = isJSONFile(this.resourcePath);
   var isAppJSon = this.resourcePath === join(rootContext, 'src', 'app.json');
@@ -127,7 +129,8 @@ module.exports = function scriptLoader(content) {
         outputPath: outputPath,
         disableCopyNpm: disableCopyNpm,
         platform: platform,
-        aliasEntries: aliasEntries
+        aliasEntries: aliasEntries,
+        externals: externals
       }]],
       platform: platform,
       isTypescriptFile: isTypescriptFile(_this.resourcePath),
