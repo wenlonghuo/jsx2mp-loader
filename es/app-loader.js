@@ -16,16 +16,16 @@ var _require3 = require('loader-utils'),
 
 var chalk = require('chalk');
 
-var _require4 = require('./utils/pathHelper'),
-    doubleBackslash = _require4.doubleBackslash,
-    getHighestPriorityPackage = _require4.getHighestPriorityPackage;
+var _require4 = require('miniapp-builder-shared'),
+    QUICKAPP = _require4.constants.QUICKAPP;
+
+var _require5 = require('./utils/pathHelper'),
+    doubleBackslash = _require5.doubleBackslash,
+    getHighestPriorityPackage = _require5.getHighestPriorityPackage;
 
 var eliminateDeadCode = require('./utils/dce');
 
 var defaultStyle = require('./defaultStyle');
-
-var _require5 = require('./constants'),
-    QUICKAPP = _require5.QUICKAPP;
 
 var processCSS = require('./styleProcessor');
 

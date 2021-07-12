@@ -10,8 +10,8 @@ var enhancedResolve = require('enhanced-resolve');
 
 var chalk = require('chalk');
 
-var _require2 = require('./constants'),
-    QUICKAPP = _require2.QUICKAPP;
+var _require2 = require('miniapp-builder-shared'),
+    QUICKAPP = _require2.constants.QUICKAPP;
 
 var _require3 = require('./utils/judgeModule'),
     isNpmModule = _require3.isNpmModule,

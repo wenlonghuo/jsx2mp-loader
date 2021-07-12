@@ -51,7 +51,7 @@ module.exports = /*#__PURE__*/function () {
   var _componentLoader = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(content) {
     var _this = this;
 
-    var query, loaderOptions, rootDir, platform, entryPath, outputPath, constantDir, mode, disableCopyNpm, turnOffSourceMap, aliasEntries, injectAppCssComponent, resourcePath, rootContext, absoluteConstantDir, sourcePath, relativeSourcePath, distFileWithoutExt, isFromConstantDir, JSXCompilerPath, compiler, compilerOptions, rawContentAfterDCE, transformed, errMsg, _yield$processCSS, style, assets, config, usingComponents, distFileDir, appCssComponentPath, relativeAppCssComponentPath, outputContent, outputOption, isCustomComponent, dependencies;
+    var query, loaderOptions, rootDir, platform, entryPath, outputPath, constantDir, mode, disableCopyNpm, turnOffSourceMap, aliasEntries, injectAppCssComponent, virtualHost, resourcePath, rootContext, absoluteConstantDir, sourcePath, relativeSourcePath, distFileWithoutExt, isFromConstantDir, JSXCompilerPath, compiler, compilerOptions, rawContentAfterDCE, transformed, errMsg, _yield$processCSS, style, assets, config, usingComponents, distFileDir, appCssComponentPath, relativeAppCssComponentPath, outputContent, outputOption, isCustomComponent, dependencies;
 
     return regeneratorRuntime.wrap(function _callee$(_context) {
       while (1) {
@@ -84,7 +84,7 @@ module.exports = /*#__PURE__*/function () {
 
           case 4:
             loaderOptions = getOptions(this);
-            rootDir = loaderOptions.rootDir, platform = loaderOptions.platform, entryPath = loaderOptions.entryPath, outputPath = loaderOptions.outputPath, constantDir = loaderOptions.constantDir, mode = loaderOptions.mode, disableCopyNpm = loaderOptions.disableCopyNpm, turnOffSourceMap = loaderOptions.turnOffSourceMap, aliasEntries = loaderOptions.aliasEntries, injectAppCssComponent = loaderOptions.injectAppCssComponent;
+            rootDir = loaderOptions.rootDir, platform = loaderOptions.platform, entryPath = loaderOptions.entryPath, outputPath = loaderOptions.outputPath, constantDir = loaderOptions.constantDir, mode = loaderOptions.mode, disableCopyNpm = loaderOptions.disableCopyNpm, turnOffSourceMap = loaderOptions.turnOffSourceMap, aliasEntries = loaderOptions.aliasEntries, injectAppCssComponent = loaderOptions.injectAppCssComponent, virtualHost = loaderOptions.virtualHost;
             resourcePath = this.resourcePath;
             rootContext = this.rootContext;
             absoluteConstantDir = constantDir.map(function (dir) {
@@ -105,7 +105,8 @@ module.exports = /*#__PURE__*/function () {
               sourceFileName: this.resourcePath,
               disableCopyNpm: disableCopyNpm,
               turnOffSourceMap: turnOffSourceMap,
-              aliasEntries: aliasEntries
+              aliasEntries: aliasEntries,
+              virtualHost: virtualHost
             });
             rawContentAfterDCE = eliminateDeadCode(content);
             _context.prev = 17;
